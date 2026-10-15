@@ -1,0 +1,27 @@
+meta:
+  # output_base_path: uncomment if you don't want to use default value from user_conf
+  # user_name: uncomment if you don't want to use default value from user_conf
+  is_test: False
+  number_of_runs: 1
+  run_name: cnn_mnist
+  git_path: /path/to/lmbrun-mnist-demo/  # CHANGE THIS TO LOCATION OF YOUR LMBRUN-MNIST-DEMO PROJECT
+  comment: Train a CNN on MNIST with a batch size 64 for 100000 epochs.
+  seed_base: 42
+
+target:
+  which: slurm
+  ssh: 
+    connect_string: ssh -t your-gpu-machine  # CHANGE THIS TO THE COMMAND THAT CONNECTS TO YOUR MACHINE
+  slurm:
+    # partitions: uncomment if you don't want to use default value from user_conf
+    num_gpus: 1
+    # gpu_type: uncomment if you don't want to use default value from user_conf
+    cpus_per_gpu: 8
+    mem: 16G
+    walltime_hrs: "1"
+    job_chain_length: 4
+
+pre_commands:
+  - source /path/to/conda/bin/activate lmbrun-mnist-demo  # CHANGE THIS TO THE LOCATION OF YOUR CONDA INSTALLATION
+run_commands:
+  - python3 train.py --output=%LOGDIR% --seed %SEED% --wandb --exp_id %RUNID% --comment "%COMMENT%"
